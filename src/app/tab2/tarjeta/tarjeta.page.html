@@ -1,0 +1,167 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{this.item.itemname}}
+      <ion-button class="btns2" fill="clear" id="present-alert3">
+        <ion-icon color="danger" name="trash-outline"></ion-icon>
+      </ion-button>
+
+    <ion-button class="btns2" fill="clear" id="open-modal">
+      <ion-icon color="warning" name="color-wand-outline"></ion-icon>
+      </ion-button>
+
+    <ion-button class="btns2" fill="clear" (click)="presentAlert2()">
+      <ion-icon color="medium" name="pencil-outline"></ion-icon>
+      </ion-button>
+    </ion-title>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-segment value="all">
+      <ion-segment-button (click)="Festado('activar')" value="all">
+        <ion-label>Activar</ion-label>
+      </ion-segment-button>
+      <ion-segment-button (click)="Festado('desactivar')"value="favorites">
+        <ion-label>Desactivar</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+    <ion-progress-bar *ngIf="this.isLoading===true" color="warning" type="indeterminate"></ion-progress-bar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-refresher slot="fixed" [pullFactor]="0.5" [pullMin]="100" [pullMax]="200" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-list lines="none" >
+    <ion-item #capturableArea [id]="'item-' + x" *ngFor="let item of this.item.tarjetas; let x=index;" [disabled]="this.estado">
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>{{item.nombre}} <ion-button class="estado" (click)="EliminarItem(x)" fill="clear" color={{item.color}}><ion-icon class="estado-icono" name="close-outline"></ion-icon></ion-button></ion-card-title>
+          <ion-card-subtitle>$ <span>{{item.subtotal}}</span></ion-card-subtitle>
+          <ion-button expand="full" color={{item.color}} (click)="show(x)"><ion-icon name="eye-outline"></ion-icon></ion-button>
+        </ion-card-header>
+      </ion-card>
+      <ion-card-content *ngIf="cardStates[x]===true">
+        <ion-item>
+          <ion-grid>
+            <ion-row>
+              <ion-col>Valor</ion-col>
+              <ion-col>Fecha</ion-col>
+              <ion-col>Eliminar</ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+        <ion-list>
+        <ion-item>
+          <ion-grid>
+            <ion-row *ngFor="let item2 of item.depositos; let z=index">
+              <ion-col>{{item2.valor}}</ion-col>
+              <ion-col>{{item2.fecha}}</ion-col>
+              <ion-col><ion-button class="estado" (click)="EliminarDeposito(x,z)" fill="clear" color={{item.color}}>X</ion-button></ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+
+      </ion-list>
+
+        <div class="btns">
+          <ion-input class="itemInput" type="number" [(ngModel)]="this.deposito.valor" label="Ingresa el valor" label-placement="floating"></ion-input>
+          <ion-button class="btnoption" (click)="depositar(x,'sumar')" color="success"><ion-icon name="add-outline"></ion-icon></ion-button>
+          <ion-button class="btnoption" (click)="depositar(x,'restar')" color="warning"><ion-icon name="remove-outline"></ion-icon></ion-button>
+        </div>
+        <ion-button color={{item.color}} (click)="CapturaPantalla(x)" expand="full"><ion-icon name="camera-outline"></ion-icon></ion-button>
+      </ion-card-content>
+    </ion-item>
+    <ion-item>Total: $ <span>{{this.item.total}}</span> </ion-item>
+  </ion-list>
+
+
+<ion-alert trigger="present-alert3" class="custom-alert" header="Are you sure?" [buttons]="alertButtons3"></ion-alert>
+
+  <ion-content class="ion-padding">
+    <ion-modal trigger="open-modal" (willDismiss)="onWillDismiss($event)">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-buttons slot="start">
+              <ion-button (click)="cancel()">Cancelar</ion-button>
+            </ion-buttons>
+            <ion-title>Crear Tarjeta</ion-title>
+            <ion-buttons slot="end">
+              <ion-button (click)="confirm()" [strong]="true">Confirmar</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          <ion-item>
+            <ion-input
+              label="Nombre"
+              labelPlacement="stacked"
+              type="text"
+              placeholder="Escribe aquí"
+              [(ngModel)]="this.tarjeta.nombre"
+            ></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-select aria-label="Color" [(ngModel)]="this.tarjeta.color" interface="action-sheet" placeholder="Selecciona el color">
+              <ion-select-option value="primary">Primary</ion-select-option>
+              <ion-select-option value="secondary">Secondary</ion-select-option>
+              <ion-select-option value="tertiary">Tertiary</ion-select-option>
+              <ion-select-option value="success">Success</ion-select-option>
+              <ion-select-option value="warning">Warning</ion-select-option>
+              <ion-select-option value="danger">Danger</ion-select-option>
+              <ion-select-option value="light">Light</ion-select-option>
+              <ion-select-option value="medium">Medium</ion-select-option>
+              <ion-select-option value="dark">Dark</ion-select-option>
+            </ion-select>
+          </ion-item>
+  <ion-item>
+          <ion-grid class="colores">
+            <ion-row>
+              <ion-col>
+                <ion-icon name="brush-outline" color="primary"></ion-icon>
+                Primary
+              </ion-col>
+              <ion-col>
+                <ion-icon name="brush-outline" color="secondary"></ion-icon>
+                Secondary
+              </ion-col>
+              <ion-col>
+                <ion-icon name="brush-outline" color="tertiary"></ion-icon>
+                Tertiary
+              </ion-col>
+              <ion-col>
+                <ion-icon name="brush-outline" color="success"></ion-icon>
+                Success
+              </ion-col>
+              <ion-col>
+                <ion-icon name="brush-outline" color="warning"></ion-icon>
+                Warning
+              </ion-col>
+              <ion-col>
+                <ion-icon name="brush-outline" color="danger"></ion-icon>
+                Danger
+              </ion-col>
+              <ion-col>
+                <ion-icon name="brush-outline" color="light"></ion-icon>
+                Light
+              </ion-col>
+              <ion-col>
+                <ion-icon name="brush-outline" color="medium"></ion-icon>
+                Medium
+              </ion-col>
+              <ion-col>
+                <ion-icon name="brush-outline" color="dark"></ion-icon>
+                Dark
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+  </ion-item>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+  </ion-content>
+
+</ion-content>
