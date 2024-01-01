@@ -3,7 +3,7 @@ import { CapacitorHttp, HttpResponse } from '@capacitor/core';
 import { Preferences } from '@capacitor/preferences';
 import { Observable, Subject } from 'rxjs';
 import { Items } from 'src/app/clases/Items/items';
-import { environment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'

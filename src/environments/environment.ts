@@ -4,7 +4,6 @@
 
 export const environment = {
   production: false,
-  url:'https://cuenta-api.onrender.com',
 };
 
 /*

@@ -4,7 +4,7 @@ import { CapacitorHttp, HttpResponse } from '@capacitor/core';
 import { Preferences } from '@capacitor/preferences';
 import { Login } from 'src/app/clases/login/login';
 import { User } from 'src/app/clases/user/user';
-import { environment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
