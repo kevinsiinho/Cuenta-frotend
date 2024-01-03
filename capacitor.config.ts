@@ -1,8 +1,8 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'frotend',
+  appId: 'Tu.Cuenta.SoftK',
+  appName: 'SotfK',
   webDir: 'www',
   server: {
     androidScheme: 'https'

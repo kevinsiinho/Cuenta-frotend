@@ -8,7 +8,7 @@
       nuevamente!
     </div>
 
-    <ion-list>
+    <ion-list class="form">
       <div class="title2">Login</div>
       <ion-item class="inputs">
         <ion-input label="Email" labelPlacement="floating" [(ngModel)]="this.login.email" placeholder="example@gmail.com"></ion-input>
@@ -19,7 +19,7 @@
       <ion-button (click)="ingresar()" expand="block">Ingresar</ion-button>
     </ion-list>
     <ion-checkbox [(ngModel)]="this.recordaremail" (ionChange)="RecordarEmail()" labelPlacement="end">Recordar datos</ion-checkbox>
-    <a href="http://">Forgot your password?</a>
+    <a class="recuperarPassword" href="">Forgot your password?</a>
   </div>
   <div class="abajo"></div>
 </ion-content>

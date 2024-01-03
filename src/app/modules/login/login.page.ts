@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Preferences } from '@capacitor/preferences';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import { Login } from 'src/app/clases/login/login';
 import { UserService } from 'src/app/servicios/user/user.service';
 
@@ -15,11 +15,14 @@ export class LoginPage implements OnInit{
   public login= new Login()
   public token:string=""
   public recordaremail:Boolean=true
+  public loading:any;
 
   constructor(
     private alertController: AlertController,
     public userService: UserService,
-    public link:Router) { }
+    public link:Router,
+    private loadingController: LoadingController
+    ) { }
 
   async presentAlert(msn:String) {
 
@@ -44,7 +47,11 @@ export class LoginPage implements OnInit{
     }
   }
 
-ingresar(){
+async ingresar(){
+  this.loading = await this.loadingController.create({
+    message: 'Cargando...',
+  });
+  await this.loading.present();
   if(this.login.email!=null && this.login.password!=null){
     this.userService.Login(this.login).then(async(res)=>{
        await Preferences.set({
@@ -60,26 +67,19 @@ ingresar(){
       }
 
       if(res.data.token){
-         this.OnQuien()
+         this.loading.dismiss();
+         this.link.navigate(['tabs/tab2'])
       }else{
+        this.loading.dismiss();
         this.presentAlert("Usuario no encontrado")
       }
    })
   }else{
+    this.loading.dismiss();
     this.presentAlert("Faltan campos por llenar")
   }
 
 }
-
-async OnQuien(){
-  const { value } = await Preferences.get({ key: 'token' });
-  if(value)
-    this.userService.Quien(value).then((res)=>{
-      this.link.navigate(['tabs/tab2'])
-    })
-
-  }
-
 
 }
 

@@ -147,10 +147,26 @@ total(){
     })
   }
 
-  EliminarItem(x:number){
-    this.item.tarjetas.splice(x,1)
-   this.Update()
-   this.total()
+async EliminarItem(x:number){
+
+    const alert = await this.alertController.create({
+      header: 'Eliminar',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Eliminar',
+          handler: () => {
+            this.item.tarjetas.splice(x,1)
+            this.Update()
+            this.total()
+          },
+        },
+      ],
+    });
+    await alert.present();
   }
 
   EliminarDeposito(x:number,z:number){
