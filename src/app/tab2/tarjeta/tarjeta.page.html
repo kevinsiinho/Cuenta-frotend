@@ -2,9 +2,9 @@
   <ion-toolbar>
     <ion-title>{{this.item.itemname}}
 
-    <ion-button class="btns2" id="popover-button" fill="clear">
+    <ion-item [button]="true" [detail]="false" class="btns2" id="popover-button">
       <ion-icon name="ellipsis-vertical-outline"></ion-icon>
-    </ion-button>
+    </ion-item>
 
     <ion-button class="btns2" *ngIf="this.item.favorito===false" (click)="Favorito()" fill="clear">
       <ion-icon  name="star-outline"></ion-icon>
@@ -39,7 +39,7 @@
     <ion-item #capturableArea [id]="'item-' + x" *ngFor="let res of this.item.tarjetas; let x=index;" [disabled]="this.item.estado">
       <ion-card>
         <ion-card-header>
-          <ion-card-title>{{res.nombre}} <ion-button class="estado" id="present-alert4" (click)="EliminarItem(x)" fill="clear" color={{item.color}}><ion-icon class="estado-icono" name="close-outline"></ion-icon></ion-button></ion-card-title>
+          <ion-card-title>{{res.nombre}} <ion-button class="estado" id="present-alert4" (click)="EliminarItem(x)" fill="clear" color={{res.color}}><ion-icon class="estado-icono" name="close-outline"></ion-icon></ion-button></ion-card-title>
           <ion-card-subtitle>$ <span>{{formatNumberMil(res.subtotal) }}</span></ion-card-subtitle>
           <ion-button expand="full" color={{res.color}}  (click)="show(x)"><ion-icon name="eye-outline"></ion-icon></ion-button>
         </ion-card-header>
@@ -60,7 +60,7 @@
             <ion-row *ngFor="let item2 of res.depositos; let z=index">
               <ion-col>{{formatNumberMil(item2.valor)}}</ion-col>
               <ion-col>{{item2.fecha}}</ion-col>
-              <ion-col><ion-button class="estado" (click)="EliminarDeposito(x,z)" fill="clear" color={{item.color}}>X</ion-button></ion-col>
+              <ion-col><ion-button class="estado" (click)="EliminarDeposito(x,z)" fill="clear" color={{res.color}}>X</ion-button></ion-col>
             </ion-row>
           </ion-grid>
         </ion-item>
