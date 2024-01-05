@@ -1,27 +1,28 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>{{this.item.itemname}}
-      <ion-button class="btns2" fill="clear" id="present-alert3">
-        <ion-icon color="danger" name="trash-outline"></ion-icon>
-      </ion-button>
 
-    <ion-button class="btns2" fill="clear" id="open-modal">
-      <ion-icon color="warning" name="color-wand-outline"></ion-icon>
-      </ion-button>
+    <ion-button class="btns2" id="popover-button" fill="clear">
+      <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+    </ion-button>
 
-    <ion-button class="btns2" fill="clear" (click)="presentAlert2()">
-      <ion-icon color="medium" name="pencil-outline"></ion-icon>
-      </ion-button>
+    <ion-button class="btns2" *ngIf="this.item.favorito===false" (click)="Favorito()" fill="clear">
+      <ion-icon  name="star-outline"></ion-icon>
+    </ion-button>
+
+    <ion-button class="btns2" *ngIf="this.item.favorito===true" (click)="Favorito()" fill="clear">
+      <ion-icon  name="star"></ion-icon>
+    </ion-button>
     </ion-title>
   </ion-toolbar>
 
   <ion-toolbar>
-    <ion-segment value="all">
-      <ion-segment-button (click)="Festado('activar')" value="all">
-        <ion-label>Activar</ion-label>
+    <ion-segment >
+      <ion-segment-button (click)="Festado('activar')" value="true">
+        <ion-label><ion-icon name="eye-outline"></ion-icon></ion-label>
       </ion-segment-button>
-      <ion-segment-button (click)="Festado('desactivar')"value="favorites">
-        <ion-label>Desactivar</ion-label>
+      <ion-segment-button (click)="Festado('desactivar')"value="false">
+        <ion-label><ion-icon name="eye-off-outline"></ion-icon></ion-label>
       </ion-segment-button>
     </ion-segment>
     <ion-progress-bar *ngIf="this.isLoading===true" color="warning" type="indeterminate"></ion-progress-bar>
@@ -35,12 +36,12 @@
   </ion-refresher>
 
   <ion-list lines="none" >
-    <ion-item #capturableArea [id]="'item-' + x" *ngFor="let item of this.item.tarjetas; let x=index;" [disabled]="this.estado">
+    <ion-item #capturableArea [id]="'item-' + x" *ngFor="let res of this.item.tarjetas; let x=index;" [disabled]="this.item.estado">
       <ion-card>
         <ion-card-header>
-          <ion-card-title>{{item.nombre}} <ion-button class="estado" id="present-alert4" (click)="EliminarItem(x)" fill="clear" color={{item.color}}><ion-icon class="estado-icono" name="close-outline"></ion-icon></ion-button></ion-card-title>
-          <ion-card-subtitle>$ <span>{{item.subtotal}}</span></ion-card-subtitle>
-          <ion-button expand="full" color={{item.color}}  (click)="show(x)"><ion-icon name="eye-outline"></ion-icon></ion-button>
+          <ion-card-title>{{res.nombre}} <ion-button class="estado" id="present-alert4" (click)="EliminarItem(x)" fill="clear" color={{item.color}}><ion-icon class="estado-icono" name="close-outline"></ion-icon></ion-button></ion-card-title>
+          <ion-card-subtitle>$ <span>{{formatNumberMil(res.subtotal) }}</span></ion-card-subtitle>
+          <ion-button expand="full" color={{res.color}}  (click)="show(x)"><ion-icon name="eye-outline"></ion-icon></ion-button>
         </ion-card-header>
       </ion-card>
       <ion-card-content *ngIf="cardStates[x]===true">
@@ -56,8 +57,8 @@
         <ion-list>
         <ion-item>
           <ion-grid>
-            <ion-row *ngFor="let item2 of item.depositos; let z=index">
-              <ion-col>{{item2.valor}}</ion-col>
+            <ion-row *ngFor="let item2 of res.depositos; let z=index">
+              <ion-col>{{formatNumberMil(item2.valor)}}</ion-col>
               <ion-col>{{item2.fecha}}</ion-col>
               <ion-col><ion-button class="estado" (click)="EliminarDeposito(x,z)" fill="clear" color={{item.color}}>X</ion-button></ion-col>
             </ion-row>
@@ -71,17 +72,17 @@
           <ion-button class="btnoption" (click)="depositar(x,'sumar')" color="success"><ion-icon name="add-outline"></ion-icon></ion-button>
           <ion-button class="btnoption" (click)="depositar(x,'restar')" color="warning"><ion-icon name="remove-outline"></ion-icon></ion-button>
         </div>
-        <ion-button color={{item.color}} (click)="CapturaPantalla(x)" expand="full"><ion-icon name="camera-outline"></ion-icon></ion-button>
+        <ion-button color={{res.color}} (click)="CapturaPantalla(x)" expand="full"><ion-icon name="camera-outline"></ion-icon></ion-button>
       </ion-card-content>
     </ion-item>
-    <ion-item>Total: $ <span>{{this.item.total}}</span> </ion-item>
+    <ion-item>Total: $ <span>{{this.totalTemp}}</span> </ion-item>
   </ion-list>
 
 
-<ion-alert trigger="present-alert3" class="custom-alert" header="Are you sure?" [buttons]="alertButtons3"></ion-alert>
+<ion-alert  [isOpen]="openModal2" class="custom-alert" header="Estas seguro?" [buttons]="alertButtons3"></ion-alert>
 
   <ion-content class="ion-padding">
-    <ion-modal trigger="open-modal" (willDismiss)="onWillDismiss($event)">
+    <ion-modal  [isOpen]="openModal" (willDismiss)="onWillDismiss($event)">
       <ng-template>
         <ion-header>
           <ion-toolbar>
@@ -163,5 +164,30 @@
       </ng-template>
     </ion-modal>
   </ion-content>
+
+  <ion-popover trigger="popover-button" [dismissOnSelect]="true">
+    <ng-template>
+      <ion-content>
+        <ion-list>
+          <ion-item [button]="true" id="nested-trigger">Ordenar Por</ion-item>
+          <ion-item [button]="true" [detail]="false" (click)="openModal = !openModal">Nuevo</ion-item>
+          <ion-item [button]="true" [detail]="false" (click)="presentAlert2()">Editar</ion-item>
+          <ion-item [button]="true" [detail]="false" (click)="openModal2 = !openModal2">Eliminar</ion-item>
+
+          <ion-popover trigger="nested-trigger" [dismissOnSelect]="true" side="end">
+            <ng-template>
+              <ion-content>
+                <ion-list>
+                  <ion-item>Ordenar por </ion-item>
+                  <ion-item [button]="true" class="nameSpan" (click)="Ordenar('nombre')" [detail]="false">Nombre</ion-item>
+                  <ion-item [button]="true" class="nameSpan" (click)="Ordenar('favorito')" [detail]="false">Favorito</ion-item>
+                </ion-list>
+              </ion-content>
+            </ng-template>
+          </ion-popover>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-popover>
 
 </ion-content>

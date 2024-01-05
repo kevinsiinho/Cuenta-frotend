@@ -9,17 +9,17 @@
     </div>
 
     <ion-list class="form">
-      <div class="title2">Login</div>
+      <div class="title2">Iniciar Sesión</div>
       <ion-item class="inputs">
-        <ion-input label="Email" labelPlacement="floating" [(ngModel)]="this.login.email" placeholder="example@gmail.com"></ion-input>
+        <ion-input label="Email" labelPlacement="stacked" [(ngModel)]="this.login.email" placeholder="example@gmail.com"></ion-input>
       </ion-item>
       <ion-item class="inputs">
-        <ion-input label="Password" type="password" [(ngModel)]="this.login.password" labelPlacement="floating" ></ion-input>
+        <ion-input label="Password" type="password" [(ngModel)]="this.login.password" labelPlacement="stacked" ></ion-input>
       </ion-item>
       <ion-button (click)="ingresar()" expand="block">Ingresar</ion-button>
     </ion-list>
     <ion-checkbox [(ngModel)]="this.recordaremail" (ionChange)="RecordarEmail()" labelPlacement="end">Recordar datos</ion-checkbox>
-    <a class="recuperarPassword" href="">Forgot your password?</a>
+    <a class="recuperarPassword" [routerLink]="['/change-password']" >¿Recuperar contraseña?</a>
   </div>
   <div class="abajo"></div>
 </ion-content>

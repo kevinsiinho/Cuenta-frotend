@@ -5,7 +5,8 @@ export class Items {
     itemname!: string;
     total!: number;
     color!: string;
-    estado!: string;
+    estado!: boolean;
+    favorito!: boolean;
     tarjetas:Tarjetas[]=[];
     userId!: string
 
@@ -15,6 +16,7 @@ export class Items {
       this.total=item.total;
       this.color=item.color;
       this.estado=item.estado;
+      this.favorito=item.favorito;
       this.tarjetas=item.tarjetas;
       this.userId= item.userId;
     }

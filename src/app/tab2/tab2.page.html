@@ -2,6 +2,9 @@
   <ion-toolbar>
     <ion-title>
       Home
+      <ion-button class="btns2" id="popover-button" fill="clear">
+        <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+      </ion-button>
     </ion-title>
     <ion-progress-bar *ngIf="this.isLoading===true" color="warning" type="indeterminate"></ion-progress-bar>
   </ion-toolbar>
@@ -23,4 +26,15 @@
     </ion-item>
   </ion-list>
 
+  <ion-popover trigger="popover-button"  [dismissOnSelect]="true">
+    <ng-template>
+      <ion-content>
+        <ion-list>
+          <ion-item>Ordenar por </ion-item>
+          <ion-item [button]="true" class="nameSpan" (click)="Ordenar('nombre')" [detail]="false">Nombre</ion-item>
+          <ion-item [button]="true" class="nameSpan" (click)="Ordenar('favorito')" [detail]="false">Favorito</ion-item>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-popover>
 </ion-content>

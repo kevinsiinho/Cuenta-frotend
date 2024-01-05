@@ -9,6 +9,7 @@ import { Tarjetas } from 'src/app/clases/Items/tarjetas';
 import { ItemsService } from 'src/app/servicios/items/items.service';
 import { UserService } from 'src/app/servicios/user/user.service';
 import html2canvas from 'html2canvas';
+import { Preferences } from '@capacitor/preferences';
 @Component({
   selector: 'app-tarjeta',
   templateUrl: './tarjeta.page.html',
@@ -25,10 +26,14 @@ export class TarjetaPage implements OnInit {
   public deposito= new Depositos()
   public depositos:Depositos[]=[];
   public alertInputs2:any[]=[]
-  public estado:boolean=false;
   public isLoading = true;
   public loading:any;
   public itemsSubscription= new Subscription()
+  public totalTemp:string=""
+  public colorFav!:string;
+  openModal = false;
+  openModal2 = false;
+
   @ViewChild('capturableArea') capturableArea!: ElementRef;
 
   constructor(private router:ActivatedRoute,
@@ -66,6 +71,7 @@ export class TarjetaPage implements OnInit {
     await alert.present();
   }
 
+
 async cargando(){
     this.loading = await this.loadingController.create({
       message: 'Cargando...',
@@ -88,8 +94,12 @@ async ngOnInit() {
 
     this.userService.Verificar();
     this.id=this.router.snapshot.paramMap.get('id')!
-    this.itemService.GetItem(this.id).then((res)=>{
+    this.itemService.GetItem(this.id).then(async (res)=>{
       this.item=res;
+      const { value } = await Preferences.get({ key: 'TarjetaOrden' });
+      if(value){
+        this.Ordenar(value)
+      }
       this.total()
       this.loading.dismiss();
       this.isLoading = false;
@@ -104,11 +114,28 @@ async ngOnInit() {
 
   }
 
+formatNumberMil(value: number): string {
+    return value.toLocaleString();
+  }
+
 total(){
+  this.totalTemp=""
   this.item.total=0
   this.item.tarjetas.forEach(element => {
     this.item.total=this.item.total+element.subtotal
+    this.totalTemp = this.item.total.toLocaleString();
   });
+}
+
+Favorito(){
+  if(this.item.favorito==true){
+    this.item.favorito=false
+  }else if(this.item.favorito==false){
+    this.item.favorito=true
+  }else{
+    this.item.favorito=false
+  }
+  this.Update()
 }
 
   async presentAlert2() {
@@ -227,7 +254,8 @@ async EliminarItem(x:number){
   }
 
   Festado(tipo:string){
-    tipo=="activar" ?   this.estado=false:  this.estado=true
+    tipo=="activar" ?   this.item.estado=false:  this.item.estado=true
+    this.Update()
   }
 
   confirm() {
@@ -285,6 +313,26 @@ CapturaPantalla(x: number) {
     document.body.removeChild(downloadLink);
   });
 }
+
+
+async Ordenar(ordenar:string){
+
+  await Preferences.set({
+    key: 'TarjetaOrden',
+    value: ordenar,
+  });
+
+  if(ordenar=="nombre"){
+    this.tarjetas.sort((a, b) => {
+      return a.nombre.localeCompare(b.nombre);
+    });
+  }else if(ordenar=="favorito"){
+    this.items.sort((a, b) => {
+      return a.favorito === b.favorito ? 0 : a.favorito ? -1 : 1;
+    });
+  }
+}
+
 
 
 }

@@ -45,7 +45,8 @@ async Guardar(){
   });
   await this.loading.present();
   this.isLoading = true;
-    this.item.estado="Activo";
+    this.item.estado=true;
+    this.item.favorito=false;
     this.item.total=0;
     this.itemService.Create(this.item).then((res)=>{
       if(res===200){

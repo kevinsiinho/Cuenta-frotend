@@ -69,3 +69,9 @@ ion-list{
   background: linear-gradient(to bottom right,  #eab862, #f2974d, #fb7952);
   clip-path: polygon(100% 0, 0 0, 100% 100%);
 }
+
+@media screen and (max-height: 600px){
+  .abajo{
+    display: none;
+  }
+}

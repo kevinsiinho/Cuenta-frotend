@@ -36,12 +36,34 @@ async ngOnInit(){
     await this.loading.present();
 
     this.userService.Verificar();
-    this.itemService.allitems().then((res)=>{
+
+    this.itemService.allitems().then(async (res)=>{
       this.items=res
+      const { value } = await Preferences.get({ key: 'IntemsOrden' });
+      if(value){
+        this.Ordenar(value)
+      }
       this.loading.dismiss();
       this.isLoading = false;
     })
   }
 
+ async Ordenar(ordenar:string){
+
+    await Preferences.set({
+      key: 'IntemsOrden',
+      value: ordenar,
+    });
+
+    if(ordenar=="nombre"){
+      this.items.sort((a, b) => {
+        return a.itemname.localeCompare(b.itemname);
+      });
+    }else if(ordenar=="favorito"){
+      this.items.sort((a, b) => {
+        return a.favorito === b.favorito ? 0 : a.favorito ? -1 : 1;
+      });
+    }
+  }
 
 }

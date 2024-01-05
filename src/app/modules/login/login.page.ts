@@ -49,7 +49,7 @@ export class LoginPage implements OnInit{
 
 async ingresar(){
   this.loading = await this.loadingController.create({
-    message: 'Cargando...',
+    message: 'Verificando...',
   });
   await this.loading.present();
   if(this.login.email!=null && this.login.password!=null){
